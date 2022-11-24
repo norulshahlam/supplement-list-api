@@ -1,0 +1,35 @@
+server:
+  port: 8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    env:
+      enabled: true
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://containers-us-west-87.railway.app:6838/railway
+    username: postgres
+    password: j8Gtwf6UWdmtCM9iiDV2
+
+#    url: jdbc:postgresql://tiny.db.elephantsql.com:5432/hajzxjip
+#    username: hajzxjip
+#    password: UTJtqDWd_ZPsiNfmwAUxRzDhi3FPniuY
+
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: update
+  sql:
+    init:
+      mode: always
+  application:
+    name: supplement-list
+    description: list of supplements
+    profile: prod

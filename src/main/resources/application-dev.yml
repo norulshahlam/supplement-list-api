@@ -1,0 +1,41 @@
+server:
+  port: 8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    env:
+      enabled: true
+spring:
+  datasource:
+    url: jdbc:h2:mem:supplementlist
+    driver-class-name: org.h2.Driver
+
+
+
+
+
+
+
+
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: update
+  sql:
+    init:
+      mode: always
+  application:
+    name: supplement-list
+    description: list of supplements
+    profile: dev
+  h2:
+    console:
+      enabled: true
