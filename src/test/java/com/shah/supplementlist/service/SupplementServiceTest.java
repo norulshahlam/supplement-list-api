@@ -164,6 +164,9 @@ class SupplementServiceTest {
         when(repository.findAll()).thenReturn(List.of(supplement));
         supplementResponse = service.getAll();
         assertThat(supplementResponse.getStatus()).isEqualTo(SUCCESS);
+        List<Supplement> data = (List<Supplement>) supplementResponse.getData();
+        assertThat(data.size()).isEqualTo(1);
+
     }
 
     @Test
