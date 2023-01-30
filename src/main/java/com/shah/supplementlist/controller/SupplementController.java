@@ -6,11 +6,9 @@ import com.shah.supplementlist.model.Supplement;
 import com.shah.supplementlist.model.SupplementCreate;
 import com.shah.supplementlist.model.SupplementResponse;
 import com.shah.supplementlist.model.SupplementUpdate;
-import com.shah.supplementlist.repository.SupplementRepository;
 import com.shah.supplementlist.service.SupplementService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +25,6 @@ import java.util.UUID;
 @CrossOrigin(origins = {"http://localhost:3000/", "https://supplement-list-ui.herokuapp.com"})
 @Slf4j
 public class SupplementController {
-
-    @Autowired
-    private SupplementRepository repository;
 
     private final SupplementService service;
 
