@@ -12,14 +12,6 @@ spring:
   datasource:
     url: jdbc:h2:mem:supplementlist
     driver-class-name: org.h2.Driver
-
-
-
-
-
-
-
-
   jpa:
     generate-ddl: true
     show-sql: true
@@ -32,10 +24,6 @@ spring:
   sql:
     init:
       mode: always
-  application:
-    name: supplement-list
-    description: list of supplements
-    profile: dev
   h2:
     console:
       enabled: true
