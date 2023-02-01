@@ -39,11 +39,13 @@ public class SupplementService {
     public SupplementResponse uploadCsv(MultipartFile file) throws IOException {
         log.info("in SupplementService::uploadCsv");
 
-        if (file.isEmpty()) {
+        if (ObjectUtils.anyNull(file)) {
+            log.error("No file uploaded");
+            throw new SupplementException("No file uploaded. Please upload file");
+        } else if (file.isEmpty()) {
             log.error("Empty file");
             throw new SupplementException("Empty file uploaded. Please upload CSV file");
-        }
-        else if (!Objects.requireNonNull(file.getContentType()).equals("text/csv")) {
+        } else if (!Objects.requireNonNull(file.getContentType()).equals("text/csv")) {
             log.error("Invalid csv type");
             throw new SupplementException(INVALID_CSV_FILE);
         }
