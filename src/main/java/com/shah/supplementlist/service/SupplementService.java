@@ -3,6 +3,7 @@ package com.shah.supplementlist.service;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.shah.supplementlist.exception.SupplementException;
+import com.shah.supplementlist.helper.SupplementHelper;
 import com.shah.supplementlist.model.*;
 import com.shah.supplementlist.repository.SupplementRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,9 +28,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 public class SupplementService {
 
     public static final String SUPPLEMENT_NOT_FOUND = "No supplement found";
-    public static final String INVALID_CSV_FILE = "Invalid CSV type. Please upload valid CSV file";
-    public static final String EMPTY_CSV_FILE = "Empty file uploaded. Please upload CSV file";
-    private final SupplementRepository repository;
+     private final SupplementRepository repository;
 
     public SupplementService(SupplementRepository repository) {
         this.repository = repository;
@@ -39,16 +37,7 @@ public class SupplementService {
     public SupplementResponse uploadCsv(MultipartFile file) throws IOException {
         log.info("in SupplementService::uploadCsv");
 
-        if (ObjectUtils.anyNull(file)) {
-            log.error("No file uploaded");
-            throw new SupplementException("No file uploaded. Please upload file");
-        } else if (file.isEmpty()) {
-            log.error("Empty file");
-            throw new SupplementException("Empty file uploaded. Please upload CSV file");
-        } else if (!Objects.requireNonNull(file.getContentType()).equals("text/csv")) {
-            log.error("Invalid csv type");
-            throw new SupplementException(INVALID_CSV_FILE);
-        }
+        SupplementHelper.checkFileEmpty(file);
 
         List<Supplement> supplementList = csvParser(file);
 

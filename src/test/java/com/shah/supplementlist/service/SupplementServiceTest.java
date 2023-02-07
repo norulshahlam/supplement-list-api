@@ -1,6 +1,5 @@
 package com.shah.supplementlist.service;
 
-import com.opencsv.CSVReader;
 import com.shah.supplementlist.exception.SupplementException;
 import com.shah.supplementlist.model.Supplement;
 import com.shah.supplementlist.model.SupplementCreate;
@@ -18,15 +17,13 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static com.shah.supplementlist.model.ResponseStatus.SUCCESS;
-import static com.shah.supplementlist.service.SupplementService.*;
+import static com.shah.supplementlist.service.SupplementService.SUPPLEMENT_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,8 +39,9 @@ class SupplementServiceTest {
     @InjectMocks
     private SupplementService service;
 
-    private MultipartFile mockCsvFile;
-    private MultipartFile mockTextFile;
+    private MultipartFile multipartFile;
+    private File file;
+    private FileInputStream input;
     SupplementException exception;
 
     private SupplementUpdate supplementUpdate;
@@ -71,91 +69,28 @@ class SupplementServiceTest {
                 .price("70.00")
                 .build();
 
+        file = new File("src/test/resources/data.csv");
+        input = new FileInputStream(file);
+
         supplementUpdate = SupplementUpdate.builder()
                 .productId(UUID.randomUUID()).build();
 
-        mockCsvFile = new MockMultipartFile("src/test/resources/data.csv",
-                "src/test/resources/data.csv",
-                "text/csv",
-                "This is a dummy file content".getBytes(StandardCharsets.UTF_8));
-
-        mockTextFile = new MockMultipartFile("src/test/resources/data.csv",
-                "src/test/resources/data.csv",
-                "text/plain",
-                "This is a dummy file content".getBytes(StandardCharsets.UTF_8));
-
+        multipartFile = new MockMultipartFile("file",
+                file.getName(), "text/csv", input);
         lenient().when(repository.saveAll(any())).thenReturn(Arrays.asList(supplement, supplement, supplement));
     }
 
     @Test
     void uploadRealCsvSuccess() throws IOException {
-        CSVReader scanner = new CSVReader(new FileReader("src/test/resources/data.csv"));
-        supplementResponse = service.uploadCsv(mockCsvFile);
+        supplementResponse = service.uploadCsv(multipartFile);
         System.out.println(supplementResponse);
     }
 
     @RepeatedTest(5)
     void uploadCsvSuccess() throws IOException {
-        supplementResponse = service.uploadCsv(mockCsvFile);
+        supplementResponse = service.uploadCsv(multipartFile);
         assertThat(supplementResponse).isNotNull();
         assertThat(supplementResponse.getStatus()).isEqualTo(SUCCESS);
-    }
-
-    @Test
-    void uploadCsvInvalidCsvType() {
-        exception = assertThrows(
-                SupplementException.class, () -> service.uploadCsv(mockTextFile));
-        assertThat(exception.getErrorMessage())
-                .isEqualTo(INVALID_CSV_FILE);
-    }
-
-    @Test
-    void uploadCsvEmptyFile() throws IOException {
-
-        mockCsvFile = new MultipartFile() {
-            @Override
-            public String getName() {
-                return null;
-            }
-
-            @Override
-            public String getOriginalFilename() {
-                return null;
-            }
-
-            @Override
-            public String getContentType() {
-                return null;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return true;
-            }
-
-            @Override
-            public long getSize() {
-                return 0;
-            }
-
-            @Override
-            public byte[] getBytes() throws IOException {
-                return new byte[0];
-            }
-
-            @Override
-            public InputStream getInputStream() throws IOException {
-                return null;
-            }
-
-            @Override
-            public void transferTo(File dest) throws IOException, IllegalStateException {
-
-            }
-        };
-        exception = assertThrows(
-                SupplementException.class, () -> service.uploadCsv(mockCsvFile));
-        assertThat(exception.getErrorMessage()).isEqualTo(EMPTY_CSV_FILE);
     }
 
     @Test
@@ -166,7 +101,6 @@ class SupplementServiceTest {
         assertThat(supplementResponse.getStatus()).isEqualTo(SUCCESS);
         List<Supplement> data = (List<Supplement>) supplementResponse.getData();
         assertThat(data.size()).isEqualTo(1);
-
     }
 
     @Test
