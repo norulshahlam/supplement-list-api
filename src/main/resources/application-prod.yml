@@ -24,7 +24,3 @@ spring:
   sql:
     init:
       mode: always
-  application:
-    name: supplement-list
-    description: list of supplements
-    profile: prod

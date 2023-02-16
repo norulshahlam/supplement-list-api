@@ -1,7 +1,6 @@
 package com.shah.supplementlist.helper;
 
 import com.opencsv.CSVWriter;
-import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -38,14 +37,12 @@ public class CsvHelper {
         Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
 
         // create csv bean reader
-        CsvToBean<Supplement> supplementCsvToBean = new CsvToBeanBuilder<Supplement>(reader)
+        List<Supplement> supplementList = new CsvToBeanBuilder<Supplement>(reader)
                 .withType(Supplement.class)
                 .withIgnoreQuotations(true)
-                .build();
-
-        // convert `CsvToBean` object to list of users
-        List<Supplement> supplementList = supplementCsvToBean.parse();
-
+                .withThrowExceptions(true)
+                .build()
+                .parse();
         reader.close();
         return supplementList;
     }
