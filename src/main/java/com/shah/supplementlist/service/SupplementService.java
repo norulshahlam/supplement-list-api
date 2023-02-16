@@ -28,7 +28,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 public class SupplementService {
 
     public static final String SUPPLEMENT_NOT_FOUND = "No supplement found";
-     private final SupplementRepository repository;
+    private final SupplementRepository repository;
 
     public SupplementService(SupplementRepository repository) {
         this.repository = repository;
@@ -76,15 +76,12 @@ public class SupplementService {
     public SupplementResponse update(SupplementUpdate supplement) {
         log.info("in SupplementService::update");
         // Fetch existing supplement
-        Optional<Supplement> item = repository.findById(supplement.getProductId());
-        if (item.isEmpty())
-            throw new SupplementException(SUPPLEMENT_NOT_FOUND);
+        Supplement item = repository.findById(supplement.getProductId()).orElseThrow(() -> new SupplementException(SUPPLEMENT_NOT_FOUND));
 
-        Supplement fetchedSupplement = item.get();
-        copyProperties(supplement, fetchedSupplement);
+        copyProperties(supplement, item);
         if (ObjectUtils.isNotEmpty(supplement.getPrice()))
-            fetchedSupplement.setPrice(new BigDecimal(supplement.getPrice()));
-        Supplement savedSupplement = repository.save(fetchedSupplement);
+            item.setPrice(new BigDecimal(supplement.getPrice()));
+        Supplement savedSupplement = repository.save(item);
 
         log.info("Supplement update success: {}", savedSupplement);
 

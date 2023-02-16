@@ -11,14 +11,9 @@ management:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://containers-us-west-87.railway.app:6838/railway
-    username: postgres
-    password: j8Gtwf6UWdmtCM9iiDV2
-
-#    url: jdbc:postgresql://tiny.db.elephantsql.com:5432/hajzxjip
-#    username: hajzxjip
-#    password: UTJtqDWd_ZPsiNfmwAUxRzDhi3FPniuY
-
+    url: ${DATABASE_URL}
+    username: ${POSTGRES_DB_USERNAME}
+    password: ${POSTGRES_DB_PASSWORD}
   jpa:
     generate-ddl: true
     show-sql: false
