@@ -33,11 +33,11 @@ public class SupplementController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<SupplementResponse> uploadCsv(
+    public ResponseEntity<SupplementResponse<List<Supplement>>> uploadCsv(
             @RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
 
         log.info("in SupplementController::uploadCsv");
-        SupplementResponse response = service.uploadCsv(file);
+        SupplementResponse<List<Supplement>> response = service.uploadCsv(file);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -49,44 +49,44 @@ public class SupplementController {
         service.downloadCsv(response);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<SupplementResponse> create(@RequestBody @Valid SupplementCreate supplement) {
-
-        log.info("in SupplementController::create");
-        SupplementResponse response = service.create(supplement);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     @GetMapping("/get-all")
-    public ResponseEntity<SupplementResponse> getAll() {
+    public ResponseEntity<SupplementResponse<List<Supplement>>> getAll() {
 
         log.info("in SupplementController::getAll");
-        SupplementResponse response = service.getAll();
+        SupplementResponse<List<Supplement>> response = service.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PostMapping("/create")
+    public ResponseEntity<SupplementResponse<Supplement>> create(@RequestBody @Valid SupplementCreate supplement) {
+
+        log.info("in SupplementController::create");
+        SupplementResponse<Supplement> response = service.create(supplement);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
     @PutMapping("/update")
-    public ResponseEntity<SupplementResponse> update(@RequestBody @Valid SupplementUpdate supplement) {
+    public ResponseEntity<SupplementResponse<Supplement>> update(@RequestBody @Valid SupplementUpdate supplement) {
 
         log.info("in SupplementController::update");
-        SupplementResponse response = service.update(supplement);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @DeleteMapping("/delete-multiple")
-    public ResponseEntity<SupplementResponse> deleteMultiple(@RequestBody @Valid List<Supplement> supplements) {
-
-        log.info("in SupplementController::deleteMultiple");
-        SupplementResponse response = service.deleteMultiple(supplements);
+        SupplementResponse<Supplement> response = service.update(supplement);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<SupplementResponse> delete(@PathVariable UUID id) {
+    public ResponseEntity<SupplementResponse<UUID>> delete(@PathVariable UUID id) {
 
         log.info("in SupplementController::delete");
-        SupplementResponse response = service.delete(id);
+        SupplementResponse<UUID> response = service.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @DeleteMapping("/delete-multiple")
+    public ResponseEntity<SupplementResponse<String>> deleteMultiple(@RequestBody @Valid List<Supplement> supplements) {
+
+        log.info("in SupplementController::deleteMultiple");
+        SupplementResponse<String> response = service.deleteMultiple(supplements);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

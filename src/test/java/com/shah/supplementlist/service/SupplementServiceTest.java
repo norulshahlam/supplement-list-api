@@ -100,7 +100,7 @@ class SupplementServiceTest {
         supplementResponse = service.getAll();
         assertThat(supplementResponse.getStatus()).isEqualTo(SUCCESS);
         List<Supplement> data = (List<Supplement>) supplementResponse.getData();
-        assertThat(data.size()).isEqualTo(1);
+        assertThat(data).hasSize(1);
     }
 
     @Test
@@ -134,7 +134,7 @@ class SupplementServiceTest {
     @Test
     void deleteSuccess() {
         when(repository.findById(any())).thenReturn(Optional.of(supplement));
-        supplementResponse = service.delete(UUID.randomUUID());
+        supplementResponse = service.deleteById(UUID.randomUUID());
         assertThat(supplementResponse.getStatus()).isEqualTo(SUCCESS);
     }
 
@@ -142,7 +142,7 @@ class SupplementServiceTest {
     void deleteFail() {
         when(repository.findById(any())).thenReturn(Optional.empty());
         exception = assertThrows(
-                SupplementException.class, () -> service.delete(supplement.getProductId()));
+                SupplementException.class, () -> service.deleteById(supplement.getProductId()));
         assertThat(exception.getErrorMessage()).isEqualTo(SUPPLEMENT_NOT_FOUND);
         assertThat(exception.getClass()).isEqualTo(SupplementException.class);
     }
@@ -161,7 +161,7 @@ class SupplementServiceTest {
         exception = assertThrows(
                 SupplementException.class, () -> service.deleteMultiple(List.of(supplement)));
         assertThat(exception.getErrorMessage()).isEqualTo(SUPPLEMENT_NOT_FOUND);
-        assertThat(repository.findAllById(any())).hasSize(0);
+        assertThat(repository.findAllById(any())).isEmpty();
     }
 
     @Test

@@ -33,7 +33,7 @@ public class SupplementService {
         this.repository = repository;
     }
 
-    public SupplementResponse uploadCsv(MultipartFile file) throws IOException {
+    public SupplementResponse<List<Supplement>> uploadCsv(MultipartFile file) throws IOException {
         log.info("in SupplementService::uploadCsv");
 
         SupplementHelper.checkFileEmpty(file);
@@ -56,7 +56,7 @@ public class SupplementService {
         csvExporter(response);
     }
 
-    public SupplementResponse getAll() {
+    public SupplementResponse<List<Supplement>> getAll() {
         log.info("in SupplementService::getAll");
         List<Supplement> allSupplements = repository.findAll();
 
@@ -66,7 +66,18 @@ public class SupplementService {
         return SupplementResponse.success(allSupplements);
     }
 
-    public SupplementResponse update(SupplementUpdate supplement) {
+    public SupplementResponse<Supplement> create(SupplementCreate supplement) {
+
+        Supplement entity = new Supplement();
+        copyProperties(supplement, entity);
+        if (ObjectUtils.isNotEmpty(supplement.getPrice()))
+            entity.setPrice(new BigDecimal(supplement.getPrice()));
+        Supplement savedSupplement = repository.save(entity);
+
+        return SupplementResponse.success(savedSupplement);
+    }
+
+    public SupplementResponse<Supplement> update(SupplementUpdate supplement) {
         log.info("in SupplementService::update");
         // Fetch existing supplement
         Supplement item = repository.findById(supplement.getProductId()).orElseThrow(() -> new SupplementException(SUPPLEMENT_NOT_FOUND));
@@ -81,30 +92,20 @@ public class SupplementService {
         return SupplementResponse.success(savedSupplement);
     }
 
-    public SupplementResponse delete(UUID id) {
+    public SupplementResponse<UUID> deleteById(UUID id) {
         log.info("in SupplementService::delete");
 
         // Check if existing supplement exists
-        repository.findById(id).orElseThrow(() -> new SupplementException(SUPPLEMENT_NOT_FOUND));
+        Supplement supplement = repository.findById(id).orElseThrow(() -> new SupplementException(SUPPLEMENT_NOT_FOUND));
 
-        repository.deleteById(id);
+        repository.deleteById(supplement.getProductId());
         log.info("Supplement with id: {} delete success!", id);
 
         return SupplementResponse.success(id);
     }
 
-    public SupplementResponse create(SupplementCreate supplement) {
 
-        Supplement entity = new Supplement();
-        copyProperties(supplement, entity);
-        if (ObjectUtils.isNotEmpty(supplement.getPrice()))
-            entity.setPrice(new BigDecimal(supplement.getPrice()));
-        Supplement savedSupplement = repository.save(entity);
-
-        return SupplementResponse.success(savedSupplement);
-    }
-
-    public SupplementResponse deleteMultiple(List<Supplement> supplements) {
+    public SupplementResponse<String> deleteMultiple(List<Supplement> supplements) {
 
         // find supplement if exists
         Iterable<UUID> ids = supplements.stream().map(Supplement::getProductId).collect(Collectors.toList());
