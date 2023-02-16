@@ -3,6 +3,9 @@ package com.shah.supplementlist.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+/**
+ * @author NORUL
+ */
 @Builder
 @Data
 @NoArgsConstructor
@@ -14,4 +17,8 @@ public class SupplementResponse<T> {
     ResponseStatus status;
     T data;
     String errorMessage;
+
+    public static <T> SupplementResponse<T> success(T data) {
+        return new SupplementResponse<>(ResponseStatus.SUCCESS, data, null);
+    }
 }

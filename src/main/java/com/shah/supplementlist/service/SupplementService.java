@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,10 +48,7 @@ public class SupplementService {
         List<Supplement> savedSupplements = repository.saveAll(supplementList);
         log.info("{} supplements saved", savedSupplements.size());
 
-        return SupplementResponse.builder()
-                .status(ResponseStatus.SUCCESS)
-                .data(savedSupplements)
-                .build();
+        return SupplementResponse.success(savedSupplements);
     }
 
     public void downloadCsv(HttpServletResponse response) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
@@ -67,10 +63,7 @@ public class SupplementService {
         if (allSupplements.isEmpty()) {
             throw new SupplementException(SUPPLEMENT_NOT_FOUND);
         }
-        return SupplementResponse.builder()
-                .status(ResponseStatus.SUCCESS)
-                .data(allSupplements)
-                .build();
+        return SupplementResponse.success(allSupplements);
     }
 
     public SupplementResponse update(SupplementUpdate supplement) {
@@ -85,27 +78,19 @@ public class SupplementService {
 
         log.info("Supplement update success: {}", savedSupplement);
 
-        return SupplementResponse.builder()
-                .status(ResponseStatus.SUCCESS)
-                .data(savedSupplement)
-                .build();
+        return SupplementResponse.success(savedSupplement);
     }
 
     public SupplementResponse delete(UUID id) {
         log.info("in SupplementService::delete");
 
         // Check if existing supplement exists
-        Optional<Supplement> item = repository.findById(id);
-        if (item.isEmpty())
-            throw new SupplementException(SUPPLEMENT_NOT_FOUND);
+        repository.findById(id).orElseThrow(() -> new SupplementException(SUPPLEMENT_NOT_FOUND));
 
         repository.deleteById(id);
         log.info("Supplement with id: {} delete success!", id);
 
-        return SupplementResponse.builder()
-                .status(ResponseStatus.SUCCESS)
-                .data(id)
-                .build();
+        return SupplementResponse.success(id);
     }
 
     public SupplementResponse create(SupplementCreate supplement) {
@@ -116,10 +101,7 @@ public class SupplementService {
             entity.setPrice(new BigDecimal(supplement.getPrice()));
         Supplement savedSupplement = repository.save(entity);
 
-        return SupplementResponse.builder()
-                .status(ResponseStatus.SUCCESS)
-                .data(savedSupplement)
-                .build();
+        return SupplementResponse.success(savedSupplement);
     }
 
     public SupplementResponse deleteMultiple(List<Supplement> supplements) {
@@ -133,9 +115,6 @@ public class SupplementService {
         }
 
         repository.deleteAllInBatch(supplementList);
-        return SupplementResponse.builder()
-                .status(ResponseStatus.SUCCESS)
-                .data(supplementList.size() + " supplement delete success out of " + supplements.size())
-                .build();
+        return SupplementResponse.success(supplementList.size() + " supplement delete success out of " + supplements.size());
     }
 }
