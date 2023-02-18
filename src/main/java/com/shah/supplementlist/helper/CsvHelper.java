@@ -27,7 +27,7 @@ public class CsvHelper {
     private static SupplementRepository repository;
 
     public CsvHelper(SupplementRepository repository) {
-        this.repository = repository;
+        CsvHelper.repository = repository;
     }
 
     public static List<Supplement> csvParser(MultipartFile file) throws IOException {
