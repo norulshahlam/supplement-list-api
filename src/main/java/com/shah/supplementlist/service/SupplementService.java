@@ -67,7 +67,7 @@ public class SupplementService {
     }
 
     public SupplementResponse<Supplement> create(SupplementCreate supplement) {
-
+        log.info("in SupplementService::create");
         Supplement entity = new Supplement();
         copyProperties(supplement, entity);
         if (ObjectUtils.isNotEmpty(supplement.getPrice()))
@@ -93,7 +93,7 @@ public class SupplementService {
     }
 
     public SupplementResponse<UUID> deleteById(UUID id) {
-        log.info("in SupplementService::delete");
+        log.info("in SupplementService::deleteById");
 
         // Check if existing supplement exists
         Supplement supplement = repository.findById(id).orElseThrow(() -> new SupplementException(SUPPLEMENT_NOT_FOUND));
@@ -106,6 +106,7 @@ public class SupplementService {
 
 
     public SupplementResponse<String> deleteMultiple(List<Supplement> supplements) {
+        log.info("in SupplementService::deleteMultiple");
 
         // find supplement if exists
         Iterable<UUID> ids = supplements.stream().map(Supplement::getProductId).collect(Collectors.toList());
