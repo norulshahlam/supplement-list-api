@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Data
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000/", "https://supplement-list-ui.herokuapp.com"})
+@CrossOrigin(origins = {"http://localhost:3001/", "https://supplement-list-ui.herokuapp.com"})
 @Slf4j
 public class SupplementController {
 
