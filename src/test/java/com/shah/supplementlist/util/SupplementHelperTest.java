@@ -1,4 +1,4 @@
-package com.shah.supplementlist.helper;
+package com.shah.supplementlist.util;
 
 import com.shah.supplementlist.exception.SupplementException;
 import org.junit.jupiter.api.Assertions;
@@ -12,8 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class SupplementHelperTest {

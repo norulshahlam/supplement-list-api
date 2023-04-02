@@ -3,7 +3,7 @@ package com.shah.supplementlist.service;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.shah.supplementlist.exception.SupplementException;
-import com.shah.supplementlist.helper.SupplementHelper;
+import com.shah.supplementlist.util.SupplementHelper;
 import com.shah.supplementlist.model.*;
 import com.shah.supplementlist.repository.SupplementRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.shah.supplementlist.helper.CsvHelper.csvExporter;
-import static com.shah.supplementlist.helper.CsvHelper.csvParser;
+import static com.shah.supplementlist.util.CsvHelper.csvExporter;
+import static com.shah.supplementlist.util.CsvHelper.csvParser;
 import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Service

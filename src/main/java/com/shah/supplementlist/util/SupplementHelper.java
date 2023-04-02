@@ -1,4 +1,4 @@
-package com.shah.supplementlist.helper;
+package com.shah.supplementlist.util;
 
 import com.shah.supplementlist.exception.SupplementException;
 import lombok.extern.slf4j.Slf4j;
