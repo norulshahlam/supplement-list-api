@@ -11,6 +11,7 @@ management:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
+    max-active: 2
     url: ${DATABASE_URL}
     username: ${POSTGRES_DB_USERNAME}
     password: ${POSTGRES_DB_PASSWORD}
