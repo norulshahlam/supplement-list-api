@@ -30,20 +30,20 @@ class SupplementHelperTest {
 
     @Test
     void checkFileEmpty_NoFileUploaded() {
-        Assertions.assertThrows(SupplementException.class, () -> helper.checkFileEmpty(null));
+        Assertions.assertThrows(SupplementException.class, () -> SupplementHelper.checkFileEmpty(null));
     }
 
     @Test
     void checkFileEmpty_EmptyFile() {
         multipartFile = new MockMultipartFile("file",
                 file.getName(), "text/csv", (byte[]) null);
-        Assertions.assertThrows(SupplementException.class, () -> helper.checkFileEmpty(multipartFile));
+        Assertions.assertThrows(SupplementException.class, () -> SupplementHelper.checkFileEmpty(multipartFile));
     }
 
     @Test
     void checkFileEmpty_InvalidCsvType() throws IOException {
         multipartFile = new MockMultipartFile("file",
                 file.getName(), "text/test", input);
-        Assertions.assertThrows(SupplementException.class, () -> helper.checkFileEmpty(multipartFile));
+        Assertions.assertThrows(SupplementException.class, () -> SupplementHelper.checkFileEmpty(multipartFile));
     }
 }

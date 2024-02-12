@@ -58,7 +58,7 @@ class SupplementServiceTest {
                 .alias("Equipoise")
                 .type("INJECTABLE")
                 .brand("MEDITECH")
-                .price(new BigDecimal(70.00))
+                .price(new BigDecimal("70.00"))
                 .dosage("250mg/ml")
                 .quantity("10 ml")
                 .packaging("vial")
